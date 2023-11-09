@@ -11,15 +11,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Assignment6',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.brown,
       ),
       initialRoute: '/',
       routes: {
         '/' : (context) => const MyHomePage(),
+        '/measure' : (context) => const MeasurePage(),
+        '/milk' : (context) => const MilkPage(),
         '/result' : (context) => const ResultPage(),
-        '/grade' : (context) => const GradePage(),
+        '/sweetcoffee' : (context) => const SweetcoffeePage(),
+        '/juiceorlatte' : (context) => const JuiceorlattePage(),
+        '/coffeeagain' : (context) => const CoffeeAgainPage(),
       }
       // home: const MyHomePage(),
     );
@@ -38,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grade Calculator'),
+        title: const Text('Choose Beverage'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -59,169 +63,355 @@ class MyForm extends StatefulWidget {
 }
 
 class _MyFormState extends State<MyForm> {
-  final _formKey = GlobalKey<FormState>();
-  StudentResult studentResult = StudentResult(0, 0, 0, -1, true);
-  String grade = '';
+
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Mid-term exam',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text.';
-                } else if (int.tryParse(value) == null) {
-                  return 'Please enter some integer.';
-                }
-                return null;
-              },
-              onSaved: (value) => studentResult.midTermExam = int.parse(value!),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Final exam',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text.';
-                } else if (int.tryParse(value) == null) {
-                  return 'Please enter some integer.';
-                }
-                return null;
-              },
-              onSaved: (value) => studentResult.finalTermExam = int.parse(value!),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            DropdownButtonFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Additional Point',
-              ),
-              value: studentResult.additionalPoint,
-              items: List.generate(11, (i) {
-                if (i == 0) {
-                  return DropdownMenuItem(
-                    value: i - 1,
-                    child: const Text('Choose the additional point')
-                  );
-                }
-                return DropdownMenuItem(
-                  value: i - 1,
-                  child: Text('${i-1} point')
-                );
+    return Center(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          const Text('I want to help you choose the beverage', style: TextStyle(fontSize: 30),),
+          const SizedBox(
+            height: 10,
+          ),
+          const Text('Let''s start!', style: TextStyle(fontSize: 50),),
+          const SizedBox(
+            height: 50,
+          ),
+          ElevatedButton(
+            child: const Text('Go'),
+            onPressed: (){
+              setState(() {
+                Navigator.pushNamed(context, '/measure');
+              });
+            },
+          )
 
-              }),
-              onChanged: (value) {
-                setState(() {
-                  studentResult.additionalPoint = value!;
-                });
-              },
-              validator: (value) {
-                if (value == 0) {
-                  return 'Please select the point';
-                }
-                return null;
-              },
+        ],
+      )
+    );
+
+  }
+}
+
+class MeasurePage extends StatefulWidget {
+  const MeasurePage({super.key});
+
+  @override
+  _MeasurePageState createState() => _MeasurePageState();
+}
+
+class _MeasurePageState extends State<MeasurePage> {
+  var count = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Measure Your Coffee'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('How many cups of coffee did you drink?', style: TextStyle(
+                fontSize: 30,
+              ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Column(
+            Text('$count cups', style: const TextStyle( 
+                fontSize: 50,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                RadioListTile(
-                  title: const Text('Team leader (+10)'),
-                  value: 10,
-                  groupValue: studentResult.teamLeaderPoint,
-                  onChanged: (value) {
+                ElevatedButton(onPressed: (){
+                  if (count > 1){
                     setState(() {
-                      studentResult.teamLeaderPoint = value!;
+                      count--;
                     });
-                  },
-                ),
-                RadioListTile(
-                  title: const Text('Team member'),
-                  value: 0,
-                  groupValue: studentResult.teamLeaderPoint,
-                  onChanged: (value) {
-                    setState(() {
-                      studentResult.teamLeaderPoint = value!;
-                    });
-                  },
-                ),
+                  }
+                }, child: const Text('-')),
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    count++;
+                  });
+                }, child: const Text('+')),
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            CheckboxListTile(
-              title: const Text('Absence less than 4'),
-              value: studentResult.attendance,
-              onChanged: (value){
-                setState(() {
-                  studentResult.attendance = value!;
-                });
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
             ElevatedButton(
-              child: const Text('Check Result'),
+              child: const Text('Next'),
               onPressed: () {
-                setState(() {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Processing data'),
-                    ));
-                    _formKey.currentState!.save();
-                    studentResult.computeSum(); // studentResult 클래스에 만들었던 compute 메서드 사용
-                    Navigator.pushNamed(context, '/result', arguments: studentResult);
-                    print(studentResult.toString());
-                  }
-                });
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-              child: const Text('Check Grade'),
-              onPressed: () {
-                setState(() {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Processing data'),
-                    ));
-                    _formKey.currentState!.save();
-                    studentResult.computeSum(); // 학생 성적 합을 구하고,
-                    if (studentResult.totalPoint! >= 60) { // totalPoint는 null이 아니라고 보장 totalPoint!
-                      grade = 'A';
-                    } else {
-                      grade = 'B';
-                    }
-                    Navigator.pushNamed(context, '/grade', arguments: grade,); //arguments에 grade를 넘겨줌
-                    print(studentResult.toString());
-                  }
-                });
+                if (count <= 1) {
+                  Navigator.pushNamed(context, '/milk');
+                } else {
+                  Navigator.pushNamed(context, '/juiceorlatte', arguments: count);
+                }
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
 
+class MilkPage extends StatefulWidget {
+  const MilkPage({super.key});
+
+  @override
+  _MilkPageState createState() => _MilkPageState();
+}
+
+class _MilkPageState extends State<MilkPage> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Milk'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            const Text('Since you drank 1 cup of coffee you may want coffee', style: TextStyle(
+              fontSize: 30,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            const Text('Do you want milk in the coffee?', style: TextStyle(
+              fontSize: 50,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/sweetcoffee');
+                  });
+                }, child: const Text('Yes')),
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/result', arguments: 'Americano');
+                  });
+                }, child: const Text('No')),
+              ],
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class JuiceorlattePage extends StatefulWidget {
+  const JuiceorlattePage({super.key});
+
+  @override
+  _JuiceorlattePageState createState() => _JuiceorlattePageState();
+}
+
+class _JuiceorlattePageState extends State<JuiceorlattePage> {
+
+  @override
+  Widget build(BuildContext context) {
+    final count = ModalRoute.of(context)?.settings.arguments as int ?? 0;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Juice or Latte'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Text('Since you drank $count cup of coffee you may want coffee', style: const TextStyle(
+              fontSize: 30,
+            ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            const Text('Do you want juice or latte?', style: TextStyle(
+              fontSize: 50,
+            ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/result', arguments: 'Grapefruit Juice');
+                  });
+                }, child: const Text('Juice')),
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/coffeeagain');
+                  });
+                }, child: const Text('Latte')),
+              ],
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CoffeeAgainPage extends StatefulWidget {
+  const CoffeeAgainPage({super.key});
+
+  @override
+  _CoffeeAgainPageState createState() => _CoffeeAgainPageState();
+}
+
+class _CoffeeAgainPageState extends State<CoffeeAgainPage> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Coffee Again'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            const Text('Do you want some more coffee?', style: TextStyle(
+              fontSize: 30,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/sweetcoffee');
+                  });
+                }, child: const Text('Yes')),
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/result', arguments: 'Sweet Potato Latte');
+                  });
+                }, child: const Text('No')),
+              ],
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SweetcoffeePage extends StatefulWidget {
+  const SweetcoffeePage({super.key});
+
+  @override
+  _SweetcoffeePageState createState() => _SweetcoffeePageState();
+}
+
+class _SweetcoffeePageState extends State<SweetcoffeePage> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sweet Coffee'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            const Text('Do you want sweet coffee?', style: TextStyle(
+              fontSize: 50,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/result', arguments: 'Caffe Latte');
+                  });
+                }, child: const Text('Yes')),
+                ElevatedButton(onPressed: (){
+                  setState(() {
+                    Navigator.pushNamed(context, '/result', arguments: 'Mocha Latte');
+                  });
+                }, child: const Text('No')),
+              ],
+            ),
+
+          ],
         ),
       ),
     );
@@ -229,12 +419,12 @@ class _MyFormState extends State<MyForm> {
 }
 
 class ResultPage extends StatelessWidget {
-  const ResultPage({super.key}); // this.result도 member variable로 등록
-  // final StudentResult? result; // result가 null을 받을 수도 있다고 표시해야함.
+  const ResultPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final result = ModalRoute.of(context)?.settings.arguments as StudentResult;
+    final String beverage = ModalRoute.of(context)?.settings.arguments as String;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Result'),
@@ -247,115 +437,34 @@ class ResultPage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Total Sum', style: TextStyle(
-                fontSize: 30,
-              ),
-            ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            Text('${result.totalPoint}', style: const TextStyle( // Text에 totalPoint를 사용하므로 const 붙일 수 없다. totalPoint가 null이 될 수 있으므로 ?. null operator를 사용한다.
-                fontSize: 50,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              child: const Text('Insert Again'),
-              onPressed: (){
-                Navigator.pop(context);
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GradePage extends StatelessWidget {
-  const GradePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final grade = ModalRoute.of(context)?.settings.arguments as String;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Grade'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: (){},
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Total Sum', style: TextStyle(
+            const Text('Your best beverage is', style: TextStyle(
               fontSize: 30,
-            ),
+              ),
             ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            Text(grade, style: const TextStyle( // Text에 totalPoint를 사용하므로 const 붙일 수 없다. totalPoint가 null이 될 수 있으므로 ?. null operator를 사용한다.
+            Text(beverage, style: const TextStyle(
               fontSize: 50,
             ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              child: const Text('Insert Again'),
-              onPressed: (){
-                Navigator.pop(context);
-              },
-            )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.refresh),
+        onPressed: () {
+          // Navigator.popUntil() is used to pop until we reach the '/' route, which is our root route.
+          Navigator.popUntil(context, ModalRoute.withName('/'));
+        },
+      ),
+
     );
   }
 }
 
-class StudentResult {
-  int midTermExam;
-  int finalTermExam;
-  int teamLeaderPoint;
-  int additionalPoint;
-  bool attendance;
-  int? totalPoint; // int? -> totalPoint can be Null
 
-  StudentResult(
-    this.midTermExam,
-    this.finalTermExam,
-    this.teamLeaderPoint,
-    this.additionalPoint,
-    this.attendance
-  );
-
-  computeSum() {
-    if (additionalPoint != -1) {
-      totalPoint = midTermExam + finalTermExam + teamLeaderPoint + additionalPoint;
-      if (!attendance) {
-        totalPoint = 0;
-      }
-    }
-  }
-
-  @override
-  String toString() {
-    return '('
-        '$midTermExam, '
-        '$finalTermExam, '
-        '$teamLeaderPoint, '
-        '$additionalPoint, '
-        '$attendance)';
-  }
-}
