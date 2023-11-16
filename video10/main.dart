@@ -1,8 +1,8 @@
-import 'package:assignment7/memberlistpage.dart';
-import 'package:assignment7/addmemberpage.dart';
+import 'package:assignment7/editpage.dart';
+import 'package:assignment7/scorepage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:assignment7/members.dart';
+import 'package:assignment7/scores.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,13 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => Members(),
+      create: (BuildContext context) => Scores(),
       builder: (context, child) => MaterialApp(
         title: 'My App',
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
-        home: AddMemberPage(),
+        home: ScorePage(),
       ),
     );
   }
